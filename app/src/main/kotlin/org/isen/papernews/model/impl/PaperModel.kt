@@ -5,6 +5,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.Logging
 import org.isen.papernews.data.PaperInformation
+import org.isen.papernews.data.Source
+import org.isen.papernews.data.SourceArt
+import org.isen.papernews.data.SourceInformation
+
 import org.isen.papernews.model.IPaperModel
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
@@ -19,11 +23,11 @@ class PaperModel:IPaperModel {
         pcs.firePropertyChange(IPaperModel.DATATYPE_SEARCH, oldValue, newValue )
     }
 
-    private var paperDescriptionlist = listOf<InfoArticle>()
+    private var paperDescriptionlist = listOf<Source>()
 
-    private var selectedPaper: InfoArticle? by Delegates.observable(null){property, oldValue, newValue ->
+    private var selectedPaper: Source? by Delegates.observable(null){property, oldValue, newValue ->
         logger.info("selectedPaper property changed, notify observer")
-        pcs.firePropertyChange(IPaperModel.DATATYPE_DISPLAY, oldValue, newValue )
+        pcs.firePropertyChange(IPaperModel.DATATYPE_SEARCH, oldValue, newValue )
     }
 
     override fun register(datatype: String, listener: PropertyChangeListener) {
@@ -44,7 +48,7 @@ class PaperModel:IPaperModel {
 
     private suspend fun downloadPaperInformation(){
         logger.info("download paper information")
-        val(request,response,result) = "https://newsapi.org/v2/everything?q=tesla&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(PaperInformation.Deserializer())
+        val(request,response,result) = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(PaperInformation.Deserializer())
 
         logger.info("Status Code : ${response.statusCode}")
         result.let { (si,error) ->
@@ -58,16 +62,16 @@ class PaperModel:IPaperModel {
     }
 
     public override fun changeCurrentSelection(name:String){
-        println("changeCurrentSelection $name")
         if(paperDescriptionlist.isEmpty()) {
-            "https://newsapi.org/v2/everything?q=tesla&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet()
-                .responseObject(PaperInformation.Deserializer()) { request, response, result ->
+            "https://newsapi.org/v2/top-headlines/sources?apiKey=092f8ef56e6648d3a291ab8004879564".httpGet()
+                .responseObject(SourceInformation.Deserializer()) { request, response, result ->
                     logger.info("Status Code : ${response.statusCode}")
-                    result.let{(si,error)->
-                        paperDescriptionlist = si?.articles ?: listOf()
+                    result.let{(data,error)->
+                        paperDescriptionlist = data?.sources ?: listOf()
+                        selectedPaper = paperDescriptionlist.find { it.name == name }
                     }
                 }
         }
-        selectedPaper = paperDescriptionlist.find { it.title == name }
+        selectedPaper = paperDescriptionlist.find { it.name == name }
     }
 }

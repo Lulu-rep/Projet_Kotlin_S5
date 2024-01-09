@@ -4,6 +4,8 @@ import org.apache.logging.log4j.kotlin.Logging
 import org.isen.papernews.ctrl.PaperController
 import org.isen.papernews.data.InfoArticle
 import org.isen.papernews.data.PaperInformation
+import org.isen.papernews.data.Source
+import org.isen.papernews.data.SourceInformation
 import org.isen.papernews.model.IPaperModel
 import org.isen.papernews.view.IPaperView
 import java.awt.BorderLayout
@@ -24,13 +26,13 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     companion object: Logging
 
     private val myFrame:JFrame
-    private val labelPaperInformation_title = JLabel()
-    private val labelPaperInformation_author = JLabel()
+    private val labelPaperInformation_source_name = JLabel()
     private val labelPaperInformation_description = JLabel()
     private val labelPaperInformation_url = JLabel()
-    private val labelPaperInformation_urlToImage = JLabel()
-    private val labelPaperInformation_publishedAt = JLabel()
-    private val labelPaperInformation_source_name = JLabel()
+    private val labelPaperInformation_category = JLabel()
+    private val labelPaperInformation_language = JLabel()
+    private val labelPaperInformation_country = JLabel()
+
 
 
     private var PaperList:JComboBox<InfoArticle> = JComboBox<InfoArticle>().apply { addActionListener(this@PaperSearchView)
@@ -61,20 +63,18 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         contentPane.layout = GridLayout(7,2)
         contentPane.preferredSize = Dimension(250,100)
 
-        contentPane.add(JLabel("Titre : "))
-        contentPane.add(labelPaperInformation_title)
-        contentPane.add(JLabel("Auteur : "))
-        contentPane.add(labelPaperInformation_author)
-        contentPane.add(JLabel("Description : "))
+        contentPane.add(JLabel("Nom de la source : "))
+        contentPane.add(labelPaperInformation_source_name)
+        contentPane.add(JLabel("Description de la source : "))
         contentPane.add(labelPaperInformation_description)
         contentPane.add(JLabel("Url : "))
         contentPane.add(labelPaperInformation_url)
-        contentPane.add(JLabel("Url pour image : "))
-        contentPane.add(labelPaperInformation_urlToImage)
-        contentPane.add(JLabel("Publié le : "))
-        contentPane.add(labelPaperInformation_publishedAt)
-        contentPane.add(JLabel("Source : "))
-        contentPane.add(labelPaperInformation_source_name)
+        contentPane.add(JLabel("Catégorie : "))
+        contentPane.add(labelPaperInformation_category)
+        contentPane.add(JLabel("Langue : "))
+        contentPane.add(labelPaperInformation_language)
+        contentPane.add(JLabel("Pays : "))
+        contentPane.add(labelPaperInformation_country)
         return contentPane
     }
 
@@ -103,16 +103,15 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
             logger.info("receive PaperInformation data")
             PaperList.model = DefaultComboBoxModel<InfoArticle>((evt.newValue as PaperInformation).articles.toTypedArray())
         }
-        else if(evt?.newValue is InfoArticle){
+        else if(evt?.newValue is Source){
             logger.info("receive InfoArticle data")
-            (evt.newValue as InfoArticle).let{
-                labelPaperInformation_title.text = it.title
-                labelPaperInformation_author.text = it.author
+            (evt.newValue as Source).let{
+                labelPaperInformation_source_name.text = it.name
                 labelPaperInformation_description.text = it.description
-                labelPaperInformation_url.text = it.url.toString()
-                labelPaperInformation_urlToImage.text = it.urlToImage.toString()
-                labelPaperInformation_publishedAt.text = it.publishedAt.toString()
-                labelPaperInformation_source_name.text = it.source.name
+                labelPaperInformation_url.text = it.url
+                labelPaperInformation_category.text = it.category
+                labelPaperInformation_language.text = it.language
+                labelPaperInformation_country.text = it.country
             }
         }
         else {
@@ -125,7 +124,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
             println("Click on combo with index ${PaperList.selectedIndex} and\" +\" value ${PaperList.selectedItem}")
             logger.info("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
 
-            this.ctrl.selectPaper(PaperList.model.getElementAt(PaperList.selectedIndex).title)
+            this.ctrl.selectPaper(PaperList.model.getElementAt(PaperList.selectedIndex).source.name)
         }
 
     }

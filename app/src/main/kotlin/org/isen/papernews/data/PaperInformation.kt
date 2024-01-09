@@ -18,7 +18,7 @@ data class PaperInformation(
 }
 
 data class InfoArticle(
-    val source: Source,
+    val source: SourceArt,
     val author: String,
     val title: String,
     val description: String,
@@ -28,7 +28,7 @@ data class InfoArticle(
     val content: String
 )
 
-data class Source(
+data class SourceArt(
     val id: String,
     val name: String
 )

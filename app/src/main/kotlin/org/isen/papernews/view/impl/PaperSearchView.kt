@@ -42,6 +42,8 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private val labelArticleUrlToImage = JLabel()
 
 
+    private val refreshButton = JButton("Actualiser")
+
 
 
     private var PaperList:JComboBox<InfoArticle> = JComboBox<InfoArticle>().apply { addActionListener(this@PaperSearchView)
@@ -55,6 +57,11 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         myFrame.contentPane.add(MakeGui())
         myFrame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         myFrame.setBounds(100, 100, 450, 300)
+        refreshButton.addActionListener {
+            logger.info("Click on refresh button")
+            println("Click on refresh button")
+            ctrl.loadPaperInformation()
+        }
     }
 
 
@@ -70,7 +77,6 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private fun createSourceInformationPanel():JPanel{
         val contentPane = JPanel()
         contentPane.layout = GridLayout(6,2)
-        contentPane.preferredSize = Dimension(250,100)
 
         contentPane.add(JLabel("Nom de la source : "))
         contentPane.add(labelPaperInformation_source_name)
@@ -114,6 +120,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         contentPane.add(createPaperComboBox(), BorderLayout.NORTH)
         //contentPane.add(createPaperInformationPanel(), BorderLayout.WEST)
         contentPane.add(createSourceInformationPanel(), BorderLayout.WEST)
+        contentPane.add(refreshButton, BorderLayout.SOUTH)
         return contentPane
     }
 

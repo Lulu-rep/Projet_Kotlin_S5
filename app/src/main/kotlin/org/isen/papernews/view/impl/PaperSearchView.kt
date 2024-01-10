@@ -33,6 +33,15 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private val labelPaperInformation_language = JLabel()
     private val labelPaperInformation_country = JLabel()
 
+    //Non utilisé pour le moment
+    private val labelArticleTitle = JLabel()
+    private val labelArticleAuthor = JLabel()
+    private val labelArticleDate = JLabel()
+    private val labelArticleDescription = JLabel()
+    private val labelArticleUrl = JLabel()
+    private val labelArticleUrlToImage = JLabel()
+
+
 
 
     private var PaperList:JComboBox<InfoArticle> = JComboBox<InfoArticle>().apply { addActionListener(this@PaperSearchView)
@@ -58,9 +67,9 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         return contentPane
     }
 
-    private fun createPaperInformationPanel():JPanel{
+    private fun createSourceInformationPanel():JPanel{
         val contentPane = JPanel()
-        contentPane.layout = GridLayout(7,2)
+        contentPane.layout = GridLayout(6,2)
         contentPane.preferredSize = Dimension(250,100)
 
         contentPane.add(JLabel("Nom de la source : "))
@@ -78,11 +87,33 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         return contentPane
     }
 
+    private fun createPaperInformationPanel():JPanel{
+        val contentPane = JPanel()
+        contentPane.layout = GridLayout(6,2)
+        contentPane.preferredSize = Dimension(250,100)
+
+        contentPane.add(JLabel("Titre de l'article : "))
+        contentPane.add(labelArticleTitle)
+        contentPane.add(JLabel("Auteur de l'article : "))
+        contentPane.add(labelArticleAuthor)
+        contentPane.add(JLabel("Date de publication : "))
+        contentPane.add(labelArticleDate)
+        contentPane.add(JLabel("Description de l'article : "))
+        contentPane.add(labelArticleDescription)
+        contentPane.add(JLabel("Url de l'article : "))
+        contentPane.add(labelArticleUrl)
+        contentPane.add(JLabel("Url de l'image : "))
+        contentPane.add(labelArticleUrlToImage)
+
+        return contentPane
+    }
+
     private fun MakeGui(): JPanel {
         val contentPane = JPanel()
         contentPane.layout = BorderLayout()
         contentPane.add(createPaperComboBox(), BorderLayout.NORTH)
-        contentPane.add(createPaperInformationPanel(), BorderLayout.WEST)
+        //contentPane.add(createPaperInformationPanel(), BorderLayout.WEST)
+        contentPane.add(createSourceInformationPanel(), BorderLayout.WEST)
         return contentPane
     }
 
@@ -98,10 +129,10 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     }
 
     override fun propertyChange(evt: PropertyChangeEvent?) {
-        println(evt?.newValue)
         if(evt?.newValue is PaperInformation){
             logger.info("receive PaperInformation data")
             PaperList.model = DefaultComboBoxModel<InfoArticle>((evt.newValue as PaperInformation).articles.toTypedArray())
+
         }
         else if(evt?.newValue is Source){
             logger.info("receive InfoArticle data")
@@ -121,7 +152,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
 
     override fun actionPerformed(e: ActionEvent?) {
         if (e?.source is JComboBox<*>){
-            println("Click on combo with index ${PaperList.selectedIndex} and\" +\" value ${PaperList.selectedItem}")
+
             logger.info("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
 
             this.ctrl.selectPaper(PaperList.model.getElementAt(PaperList.selectedIndex).source.name)

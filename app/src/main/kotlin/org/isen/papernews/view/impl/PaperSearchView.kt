@@ -5,7 +5,6 @@ import org.isen.papernews.ctrl.PaperController
 import org.isen.papernews.data.InfoArticle
 import org.isen.papernews.data.PaperInformation
 import org.isen.papernews.data.Source
-import org.isen.papernews.data.SourceInformation
 import org.isen.papernews.model.IPaperModel
 import org.isen.papernews.view.IPaperView
 import java.awt.BorderLayout
@@ -21,7 +20,6 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
-import org.isen.papernews.view.impl.InternalWebView
 
 class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPaperView,ActionListener {
     companion object: Logging
@@ -179,7 +177,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
             logger.info("Click on button")
             println("Click on button")
             val url = PaperList.model.getElementAt(PaperList.selectedIndex).url
-            InternalWebView().display(url.toString())
+            PaperWebView().display(url.toString())
         }
 
     }

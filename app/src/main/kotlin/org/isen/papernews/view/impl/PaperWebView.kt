@@ -6,8 +6,8 @@ import javafx.scene.Scene
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 
-class InternalWebView() : Application() {
-    private val internalWebViewInstances: MutableList<InternalWebView> = mutableListOf()
+class PaperWebView() : Application() {
+    private val paperWebViewInstances: MutableList<PaperWebView> = mutableListOf()
     private lateinit var webView: WebView
 
     override fun start(primaryStage: Stage) {
@@ -30,7 +30,7 @@ class InternalWebView() : Application() {
         }
 
         // Add this instance to the list
-        internalWebViewInstances.add(this)
+        paperWebViewInstances.add(this)
 
         // Show the primary stage
         primaryStage.show()
@@ -39,7 +39,7 @@ class InternalWebView() : Application() {
     public fun display(url: String) {
         Platform.runLater {
             // Create a new instance of InternalWebView
-            val internalWebView = InternalWebView()
+            val paperWebView = PaperWebView()
 
             // Create a new stage and set the WebView as its content
             val stage = Stage()
@@ -50,7 +50,7 @@ class InternalWebView() : Application() {
             stage.show()
 
             // Add the new instance to the list
-            internalWebViewInstances.add(internalWebView)
+            paperWebViewInstances.add(paperWebView)
         }
     }
     init {
@@ -58,6 +58,6 @@ class InternalWebView() : Application() {
     }
     override fun stop() {
         // Remove this instance from the list when the stage is closed
-        internalWebViewInstances.remove(this)
+        paperWebViewInstances.remove(this)
     }
 }

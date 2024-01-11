@@ -49,7 +49,21 @@ class PaperModel:IPaperModel {
     private suspend fun downloadPaperInformation(){
         logger.info("download paper information")
         val(request,response,result) = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(PaperInformation.Deserializer())
-
+        if (response.statusCode != 200) {
+            logger.error("error when downloading data (paper information): ${response.statusCode}")
+            if(response.statusCode== 429){
+                logger.error("too many request, please wait 12 hours")
+            }
+            else if(response.statusCode == 401){
+                logger.error("invalid api key")
+            }
+            else if(response.statusCode == 400){
+                logger.error("bad request")
+            }
+            else if(response.statusCode == 500){
+                logger.error("internal server error")
+            }
+        }
         logger.info("Status Code : ${response.statusCode}")
         result.let { (si,error) ->
             if (si!=null){

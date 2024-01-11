@@ -1,5 +1,6 @@
 package org.isen.papernews.model.impl
 
+import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.fuel.httpGet
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,29 +49,14 @@ class PaperModel:IPaperModel {
 
     private suspend fun downloadPaperInformation(){
         logger.info("download paper information")
-        val(request,response,result) = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(PaperInformation.Deserializer())
-        if (response.statusCode != 200) {
-            logger.error("error when downloading data (paper information): ${response.statusCode}")
-            if(response.statusCode== 429){
-                logger.error("too many request, please wait 12 hours")
-            }
-            else if(response.statusCode == 401){
-                logger.error("invalid api key")
-            }
-            else if(response.statusCode == 400){
-                logger.error("bad request")
-            }
-            else if(response.statusCode == 500){
-                logger.error("internal server error")
-            }
-        }
-        logger.info("Status Code : ${response.statusCode}")
-        result.let { (si,error) ->
-            if (si!=null){
-                logger.info("receive data $si")
-                this.paperInformation = si
-            } else {
-                logger.error("error when downloading data (paper information): $error")
+        val(request,response,result) = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com,engadget.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(PaperInformation.Deserializer())
+        if(manageError(response)){
+            logger.info("Status Code : ${response.statusCode}")
+            result.let { (si,error) ->
+                if (si!=null){
+                    logger.info("receive data $si")
+                    this.paperInformation = si
+                }
             }
         }
     }
@@ -79,13 +65,39 @@ class PaperModel:IPaperModel {
         if(paperDescriptionlist.isEmpty()) {
             "https://newsapi.org/v2/top-headlines/sources?apiKey=092f8ef56e6648d3a291ab8004879564".httpGet()
                 .responseObject(SourceInformation.Deserializer()) { request, response, result ->
-                    logger.info("Status Code : ${response.statusCode}")
-                    result.let{(data,error)->
-                        paperDescriptionlist = data?.sources ?: listOf()
-                        selectedPaper = paperDescriptionlist.find { it.name == name }
+                    if (manageError(response)) {
+                        logger.info("Status Code : ${response.statusCode}")
+                        result.let { (data, error) ->
+                            paperDescriptionlist = data?.sources ?: listOf()
+                            selectedPaper = paperDescriptionlist.find { it.name == name }
+                        }
                     }
                 }
         }
         selectedPaper = paperDescriptionlist.find { it.name == name }
+    }
+
+    private fun manageError(res: Response) : Boolean{
+        if (res.statusCode != 200) {
+            logger.error("error when downloading data (paper information): ${res.statusCode}")
+            if(res.statusCode== 429){
+                logger.error("too many request, please wait 12 hours")
+                return false
+            }
+            else if(res.statusCode == 401){
+                logger.error("invalid api key")
+                return false
+            }
+            else if(res.statusCode == 400){
+                logger.error("bad request")
+                return false
+            }
+            else if(res.statusCode == 500){
+                logger.error("internal server error")
+                return false
+            }
+            return false
+        }
+        return true
     }
 }

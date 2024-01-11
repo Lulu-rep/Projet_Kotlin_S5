@@ -32,13 +32,6 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private val labelPaperInformation_language = JLabel()
     private val labelPaperInformation_country = JLabel()
 
-    //Non utilisé pour le moment
-    private val labelArticleTitle = JLabel()
-    private val labelArticleAuthor = JLabel()
-    private val labelArticleDate = JLabel()
-    private val labelArticleDescription = JLabel()
-    private val labelArticleUrl = JLabel()
-    private val labelArticleUrlToImage = JLabel()
 
 
     private val refreshButton = JButton("Actualiser")
@@ -56,10 +49,9 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         myFrame.isVisible = false
         myFrame.contentPane.add(MakeGui())
         myFrame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        myFrame.setBounds(100, 100, 450, 300)
+        myFrame.setBounds(100, 100, 900, 600)
         refreshButton.addActionListener {
             logger.info("Click on refresh button")
-            println("Click on refresh button")
             ctrl.loadPaperInformation()
         }
     }
@@ -77,6 +69,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private fun createSourceInformationPanel():JPanel{
         val contentPane = JPanel()
         contentPane.layout = GridLayout(6,2)
+        contentPane.preferredSize = Dimension(450, 300)
 
         contentPane.add(JLabel("Nom de la source : "))
         contentPane.add(labelPaperInformation_source_name)
@@ -93,32 +86,10 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         return contentPane
     }
 
-    private fun createPaperInformationPanel():JPanel{
-        val contentPane = JPanel()
-        contentPane.layout = GridLayout(6,2)
-        contentPane.preferredSize = Dimension(250,100)
-
-        contentPane.add(JLabel("Titre de l'article : "))
-        contentPane.add(labelArticleTitle)
-        contentPane.add(JLabel("Auteur de l'article : "))
-        contentPane.add(labelArticleAuthor)
-        contentPane.add(JLabel("Date de publication : "))
-        contentPane.add(labelArticleDate)
-        contentPane.add(JLabel("Description de l'article : "))
-        contentPane.add(labelArticleDescription)
-        contentPane.add(JLabel("Url de l'article : "))
-        contentPane.add(labelArticleUrl)
-        contentPane.add(JLabel("Url de l'image : "))
-        contentPane.add(labelArticleUrlToImage)
-
-        return contentPane
-    }
-
     private fun MakeGui(): JPanel {
         val contentPane = JPanel()
         contentPane.layout = BorderLayout()
         contentPane.add(createPaperComboBox(), BorderLayout.NORTH)
-        //contentPane.add(createPaperInformationPanel(), BorderLayout.WEST)
         contentPane.add(createSourceInformationPanel(), BorderLayout.WEST)
         contentPane.add(displayButton(), BorderLayout.SOUTH)
         return contentPane
@@ -169,13 +140,11 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         if (e?.source is JComboBox<*>){
 
             logger.info("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
-            println("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
             this.ctrl.selectPaper(PaperList.model.getElementAt(PaperList.selectedIndex).source.name)
 
         }
         if (e?.source is JButton && e.source == displayButton){
             logger.info("Click on button")
-            println("Click on button")
             val url = PaperList.model.getElementAt(PaperList.selectedIndex).url
             PaperWebView().display(url.toString())
         }

@@ -43,6 +43,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
 
 
     private val refreshButton = JButton("Actualiser")
+    private val displayButton = JButton("Afficher")
 
 
 
@@ -120,10 +121,20 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         contentPane.add(createPaperComboBox(), BorderLayout.NORTH)
         //contentPane.add(createPaperInformationPanel(), BorderLayout.WEST)
         contentPane.add(createSourceInformationPanel(), BorderLayout.WEST)
-        contentPane.add(refreshButton, BorderLayout.SOUTH)
+        contentPane.add(displayButton(), BorderLayout.SOUTH)
         return contentPane
     }
 
+    private fun displayButton(): JPanel{
+        val contentPane = JPanel()
+        contentPane.layout = BorderLayout()
+        contentPane.add(refreshButton, BorderLayout.CENTER)
+        contentPane.add(displayButton, BorderLayout.SOUTH)
+        displayButton.addActionListener {
+            InternalWebView().display(labelArticleUrl.text)
+        }
+        return contentPane
+    }
 
     override fun display() {
         logger.info("PaperSearchView : display")

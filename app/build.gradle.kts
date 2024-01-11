@@ -9,14 +9,28 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.9.10"
+    id ("org.openjfx.javafxplugin") version "0.1.0"
+    id ("application")
 
-    // Apply the application plugin to add support for building a CLI application in Java.
-    application
+}
+
+javafx {
+    version = "21.0.1"
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web")
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+}
+
+sourceSets {
+    create("integration") {
+        kotlin {
+            compileClasspath += main.get().output + configurations["testRuntimeClasspath"]
+            runtimeClasspath += output + compileClasspath + test.get().runtimeClasspath
+        }
+    }
 }
 
 dependencies {
@@ -39,6 +53,11 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.22.0")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:1.3.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+
+    // JavaFX
+    implementation("org.openjfx:javafx-base:21.0.1")
+    implementation("org.openjfx:javafx-controls:21.0.1")
+    implementation("org.openjfx:javafx-web:21.0.1")
 }
 
 testing {

@@ -21,6 +21,7 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
+import org.isen.papernews.view.impl.InternalWebView
 
 class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPaperView,ActionListener {
     companion object: Logging
@@ -130,9 +131,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         contentPane.layout = BorderLayout()
         contentPane.add(refreshButton, BorderLayout.CENTER)
         contentPane.add(displayButton, BorderLayout.SOUTH)
-        displayButton.addActionListener {
-            InternalWebView().display(labelArticleUrl.text)
-        }
+        displayButton.addActionListener(this)
         return contentPane
     }
 
@@ -172,8 +171,15 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
         if (e?.source is JComboBox<*>){
 
             logger.info("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
-
+            println("Click on combo with index ${PaperList.selectedIndex} and" +" value ${PaperList.selectedItem}")
             this.ctrl.selectPaper(PaperList.model.getElementAt(PaperList.selectedIndex).source.name)
+
+        }
+        if (e?.source is JButton && e.source == displayButton){
+            logger.info("Click on button")
+            println("Click on button")
+            val url = PaperList.model.getElementAt(PaperList.selectedIndex).url
+            InternalWebView().display(url.toString())
         }
 
     }

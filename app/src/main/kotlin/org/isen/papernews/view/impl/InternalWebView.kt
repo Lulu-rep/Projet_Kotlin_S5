@@ -6,7 +6,7 @@ import javafx.scene.Scene
 import javafx.scene.web.WebView
 import javafx.stage.Stage
 
-class InternalWebView : Application() {
+class InternalWebView() : Application() {
     private val internalWebViewInstances: MutableList<InternalWebView> = mutableListOf()
     private lateinit var webView: WebView
 
@@ -36,7 +36,7 @@ class InternalWebView : Application() {
         primaryStage.show()
     }
 
-    fun display(url: String) {
+    public fun display(url: String) {
         Platform.runLater {
             // Create a new instance of InternalWebView
             val internalWebView = InternalWebView()

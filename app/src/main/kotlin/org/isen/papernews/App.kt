@@ -3,17 +3,23 @@
  */
 package org.isen.papernews
 
+import javafx.application.Application
+import javafx.stage.Stage
 import org.isen.papernews.ctrl.PaperController
 import org.isen.papernews.model.impl.PaperModel
 import org.isen.papernews.view.impl.PaperSearchView
 
-fun main() {
-    val paperModel= PaperModel()
+class App: Application() {
+    val paperModel = PaperModel()
     val paperCtrl = PaperController(paperModel)
-    val paperSearch = PaperSearchView(paperCtrl)
+    val papersearch = PaperSearchView(paperCtrl)
+    //WebView().display("https://www.google.com")
+    override fun start(primaryStage: Stage) {
+        this.paperCtrl.displayView()
+        this.paperCtrl.loadPaperInformation()
+    }
+}
 
-    paperCtrl.displayView()
-    paperCtrl.loadPaperInformation()
-
-
+fun main() {
+    Application.launch(App::class.java)
 }

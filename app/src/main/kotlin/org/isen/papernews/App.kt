@@ -13,7 +13,6 @@ class App: Application() {
     val paperModel = PaperModel()
     val paperCtrl = PaperController(paperModel)
     val papersearch = PaperSearchView(paperCtrl)
-    //WebView().display("https://www.google.com")
     override fun start(primaryStage: Stage) {
         this.paperCtrl.displayView()
         this.paperCtrl.loadPaperInformation()

@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.Logging
 import org.isen.papernews.data.PaperInformation
 import org.isen.papernews.data.Source
-import org.isen.papernews.data.SourceArt
 import org.isen.papernews.data.SourceInformation
 
 import org.isen.papernews.model.IPaperModel

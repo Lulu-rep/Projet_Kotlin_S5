@@ -10,7 +10,6 @@ class PaperController(val model: IPaperModel) {
         this.views.add(v)
         if(datatype.isEmpty()){
             this.model.register(IPaperModel.DATATYPE_SEARCH,v)
-            this.model.register(IPaperModel.DATATYPE_SEARCH, v)
         } else {
             this.model.register(datatype, v)
         }

@@ -69,7 +69,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
     private fun createSourceInformationPanel():JPanel{
         val contentPane = JPanel()
         contentPane.layout = GridLayout(6,2)
-        contentPane.preferredSize = Dimension(450, 300)
+        contentPane.preferredSize = Dimension(800, 300)
 
         contentPane.add(JLabel("Nom de la source : "))
         contentPane.add(labelPaperInformation_source_name)

@@ -39,5 +39,32 @@ class PaperModelJUnitTest {
 
     }
 
+    @Test
+    fun changeCurrentSelection(){
+        var passObserver = false
+        var data:Any?= null
+        val myObserver = PropertyChangeListener{
+            passObserver = true
+            data = it.newValue
+        }
+
+        val myModel = PaperModel()
+        myModel.register(IPaperModel.DATATYPE_SEARCH, myObserver)
+        myModel.findPaperInformation()
+
+        logger.info("Waiting data...")
+        Thread.sleep(5000)
+        assertTrue(passObserver)
+        assertNotNull(data)
+        data?.let{d:Any ->
+            assertEquals(PaperInformation::class, d::class)
+            (d as PaperInformation).let{
+                assertEquals("ok",it.status)
+                assertEquals(100, it.articles.size)
+            }
+        }
+
+    }
+
 
 }

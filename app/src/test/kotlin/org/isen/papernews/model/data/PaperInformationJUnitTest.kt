@@ -8,7 +8,7 @@ import kotlin.test.*
 class PaperInformationJUnitTest {
     @Test
     fun GetNumberOfArticlesFromJson() {
-        val (request, response, result)  = "https://newsapi.org/v2/everything?q=tesla&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(
+        val (request, response, result)  = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com,engadget.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(
             PaperInformation.Deserializer()
         )
 
@@ -25,21 +25,23 @@ class PaperInformationJUnitTest {
 
     @Test
     fun getFirstArticleInformationFromJson(){
-        val (request, response, result)  = "https://newsapi.org/v2/everything?q=tesla&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(
+        val (request, response, result)  = "https://newsapi.org/v2/everything?domains=techcrunch.com,thenextweb.com,engadget.com&apiKey=092f8ef56e6648d3a291ab8004879564".httpGet().responseObject(
             PaperInformation.Deserializer()
         )
 
         assertTrue(response.isSuccessful)
         val(si,error) = result
         if (si!=null) {
-            assertEquals("wired", si.articles[0].source.id)
-            assertEquals("Wired", si.articles[0].source.name)
-            assertEquals("Morgan Meaker", si.articles[0].author)
-            assertEquals("Tesla Is Suing Sweden", si.articles[0].title)
-            assertEquals("Unions are boycotting Tesla’s business operations in Sweden to pressure it to sign an agreement with its workers. Now Tesla has decided to sue.", si.articles[0].description)
-            assertEquals("https://www.wired.com/story/tesla-sues-sweden-union-action/", si.articles[0].url.toString())
-            assertEquals("https://media.wired.com/photos/6564db3faaee1faccb9e326a/191:100/w_1280,c_limit/tesla-labor-biz-GettyImages-1747826024.jpg", si.articles[0].urlToImage.toString())
-            assertEquals("Mon Nov 27 19:11:03 CET 2023", si.articles[0].publishedAt.toString())
+            assertEquals("techcrunch", si.articles[0].source.id)
+            assertEquals("TechCrunch", si.articles[0].source.name)
+            assertEquals("Manish Singh", si.articles[0].author)
+            assertEquals("Is India done with crypto?", si.articles[0].title)
+            assertEquals("It wasn’t long ago when Indian venture capitalists were scrambling to establish their crypto credentials. Ethereum wallet addresses adorned Twitter profiles. Over a dozen VC firms scrambled to publish their own web3 investment theses, some even lowering their…", si.articles[0].description)
+            assertEquals("https://techcrunch.com/2024/01/10/is-india-done-with-crypto/", si.articles[0].url.toString())
+            assertEquals("https://techcrunch.com/wp-content/uploads/2022/08/GettyImages-1042683346.jpg?resize=1200,899", si.articles[0].urlToImage.toString())
+            assertEquals("Thu Jan 11 08:31:59 CET 2024", si.articles[0].publishedAt.toString())
+            assertEquals("It wasn’t long ago when Indian venture capitalists were scrambling to establish their crypto credentials. Ethereum wallet addresses adorned Twitter profiles. Over a dozen VC firms scrambled to publis… [+3723 chars]", si.articles[0].content)
+
         } else {
             fail("error")
         }

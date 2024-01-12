@@ -144,7 +144,7 @@ class PaperSearchView(val ctrl:PaperController, title:String = "PaperNews"): IPa
 
         }
         if (e?.source is JButton && e.source == displayButton){
-            logger.info("Click on button")
+            logger.info("Click on display button")
             val url = PaperList.model.getElementAt(PaperList.selectedIndex).url
             PaperWebView().display(url.toString())
         }

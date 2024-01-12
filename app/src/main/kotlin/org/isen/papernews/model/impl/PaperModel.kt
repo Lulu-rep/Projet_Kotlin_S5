@@ -53,7 +53,7 @@ class PaperModel:IPaperModel {
             logger.info("Status Code : ${response.statusCode}")
             result.let { (si,error) ->
                 if (si!=null){
-                    logger.info("receive data $si")
+                    logger.info("receive data ${si.status}")
                     this.paperInformation = si
                 }
             }
